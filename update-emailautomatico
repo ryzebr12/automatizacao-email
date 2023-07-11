@@ -1,0 +1,71 @@
+import smtplib
+from email.message import EmailMessage
+
+def enviar_email(destinatario, assunto, corpo):
+    remetente = "facacega@proton.me"
+    senha = "sua_senha"
+
+    msg = EmailMessage()
+    msg["Subject"] = assunto
+    msg["From"] = remetente
+    msg["To"] = destinatario
+    msg.set_content(corpo)
+
+    try:
+        server = smtplib.SMTP("smtp.protonmail.com", 587)
+        server.ehlo()
+        server.starttls()
+        server.login(remetente, senha)
+        server.send_message(msg)
+        server.quit()
+        print("E-mail enviado com sucesso!")
+    except Exception as e:
+        print(f"Ocorreu um erro ao enviar o e-mail: {str(e)}")
+
+def ler_emails_do_arquivo(nome_arquivo):
+    try:
+        with open(nome_arquivo, "r") as arquivo:
+            emails = arquivo.readlines()
+            emails = [email.strip() for email in emails if email.strip()]
+            return emails
+    except FileNotFoundError:
+        print(f"O arquivo '{nome_arquivo}' não foi encontrado.")
+        return []
+    except Exception as e:
+        print(f"Ocorreu um erro ao ler o arquivo: {str(e)}")
+        return []
+
+def ler_assunto_corpo_do_arquivo(nome_arquivo):
+    try:
+        with open(nome_arquivo, "r") as arquivo:
+            linhas = arquivo.readlines()
+            assunto = linhas[0].strip()
+            corpo = "".join(linhas[1:]).strip()
+            return assunto, corpo
+    except FileNotFoundError:
+        print(f"O arquivo '{nome_arquivo}' não foi encontrado.")
+        return None, None
+    except Exception as e:
+        print(f"Ocorreu um erro ao ler o arquivo: {str(e)}")
+        return None, None
+
+def main():
+    arquivo_emails = "emails.txt"  # Nome do arquivo com os e-mails
+    arquivo_assunto = "assunto.txt"  # Nome do arquivo com o assunto
+    arquivo_corpo = "corpo.txt"  # Nome do arquivo com o corpo
+
+    emails = ler_emails_do_arquivo(arquivo_emails)
+    if not emails:
+        print("Não foram encontrados endereços de e-mail válidos.")
+        return
+
+    assunto, corpo = ler_assunto_corpo_do_arquivo(arquivo_assunto)
+    if not assunto or not corpo:
+        print("Não foi possível ler o assunto ou o corpo do e-mail.")
+        return
+
+    for email in emails:
+        enviar_email(email, assunto, corpo)
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,6 @@
+Olá,
+
+Este é o corpo do e-mail. Testando o envio automático de e-mails.
+
+Atenciosamente,
+Seu Nome
