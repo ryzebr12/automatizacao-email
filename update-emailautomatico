@@ -2,7 +2,7 @@ import smtplib
 from email.message import EmailMessage
 
 def enviar_email(destinatario, assunto, corpo):
-    remetente = "facacega@proton.me"
+    remetente = "seu email"
     senha = "sua_senha"
 
     msg = EmailMessage()
